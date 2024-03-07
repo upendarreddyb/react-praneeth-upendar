@@ -1,36 +1,63 @@
 import React, { useState } from 'react'
-
 import { Select, Option, Checkbox, Textarea, Input, Button } from "@material-tailwind/react";
 import { useFormik } from 'formik';
-
-
-
+import axios from "axios";
 
 const AddQuestion = () => {
+    
     const [questiontype, setQuestionType] = useState(true);
-
-
     const setDropvalues = (type, val) => {
-        val === 'Text' ? setQuestionType(true) : setQuestionType(false);
+        console.log(type, val)
+        if (val === 'Text') setQuestionType(true)
+        if (val === 'Image') setQuestionType(false);
         formik.values[type] = val;
         formik.setFieldValue(formik.values[type], val);
+    }
+
+    const setFieldValues = (type, value) => {
+        formik.values.file = Object.assign(value);
+        formik.setFieldValue(formik.values.file, Object.assign(value));
+        console.log("onchange", formik.values.file)
     }
 
     const formik = useFormik({
         initialValues: {
             qtype: '',
             question: '',
-            question_upload: '',
+            file: null,
             subject: '',
             deficulty: '',
             gradelevel: [],
             optionA: '',
             optionB: '',
             optionC: '',
-            optionD: ''
+            optionD: '',
         },
         onSubmit: (values) => {
-             console.log("form values", values)
+            console.log("submit file", values.file);
+            const formData = new FormData();
+            formData.append('qtype', values.qtype);
+            formData.append('question', values.question);
+            formData.append('file', values.file);
+            formData.append('subject', values.subject);
+            formData.append('deficulty', values.deficulty);
+            formData.append('gradelevel', values.gradelevel);
+            formData.append('optionA', values.optionA);
+            formData.append('optionB', values.optionB);
+            formData.append('optionC', values.optionC);
+            formData.append('optionD', values.optionD);
+            axios.post("http://localhost:4000/q/question", formData).then(res => {
+                console.log(res)
+                if (res.status === 200) {
+                    console.log("success: " + res.data.msg)
+                } else {
+                    console.log("Error: " + res.data.msg)
+                }
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+
         },
         validate: (values) => {
             console.log("validate", values)
@@ -38,15 +65,13 @@ const AddQuestion = () => {
             if (!values.qtype) {
                 errors.qtype = "Question Type Required";
             }
-            if (!values.question) {
-                errors.question = "Question Required";
+            if (!values.qtype === 'Image' && !values.question) {
+                errors.question = "Image Required";
             }
             if (values.qtype === 'Text' && !values.question) {
                 errors.question = "Question  Required";
             }
-            if (values.qtype === 'Image' && !values.question_upload) {
-                errors.question_upload = "Upload Question";
-            }
+
             if (!values.subject) {
                 errors.subject = "Subject Required";
             }
@@ -63,23 +88,20 @@ const AddQuestion = () => {
             if (!values.optionB) {
                 errors.optionB = "optionB Required";
             }
-           else if (!values.optionC) {
+            if (!values.optionC) {
                 errors.optionC = "optionC Required";
             }
-           else if (!values.optionD) {
+            if (!values.optionD) {
                 errors.optionD = "optionD Required";
             }
             return errors;
         }
-
-    })
-
-
+    });
 
 
     return (
-
         <div className="">
+           
             <div className="bg-purple-200 h-16 shadow-xl" >
                 <h2 className="text-white text-center py-5 font-bolt text-xl">Adding Question</h2>
             </div>
@@ -96,18 +118,14 @@ const AddQuestion = () => {
                                         <Option value="Image">Image</Option>
                                     </Select>
                                     <span className="text-red-800"> {formik.errors.qtype ? <div>{formik.errors.qtype}</div> : null}</span>
-
-
                                 </div>
                                 {
                                     questiontype &&
                                     <div className="col-span-9" >
-                                        <Textarea label="Message" color="purple" name="question" onChange={formik.handleChange} />
+                                        <Textarea label="Question" color="purple" name="question"  resize={true} onChange={formik.handleChange} />
 
                                         <span className="text-red-800"> {formik.errors.question ? <div>{formik.errors.question}</div> : null}</span>
                                     </div>
-
-
                                 }
                                 {
                                     questiontype ? false :
@@ -121,14 +139,21 @@ const AddQuestion = () => {
                                                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                                         >
                                                             <span>Upload a file</span>
-                                                            <input id="file-upload" name="question_upload" type="file" className="sr-only" onChange={formik.handleChange} />
+                                                            <input id="file-upload"
+                                                                type="file"
+                                                                name="file"
+                                                                onChange={(event) => {
+                                                                    console.log("f onchange", event.currentTarget.files[0])
+                                                                    setFieldValues("file", event.currentTarget.files[0]);
+                                                                }}
+                                                            />
                                                         </label>
-                                                        <p className="pl-1">or drag and drop</p>
+                                                        {/* <p className="pl-1">or drag and drop</p> */}
                                                     </div>
-                                                    <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                                    {/* <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p> */}
                                                 </div>
                                             </div>
-                                            <span className="text-red-800"> {formik.errors.question_upload ? <div>{formik.errors.question_upload}</div> : null}</span>
+                                            <span className="text-red-800"> {formik.errors.file ? <div>{formik.errors.file}</div> : null}</span>
                                         </div>
                                 }
 
