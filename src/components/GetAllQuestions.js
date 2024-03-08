@@ -4,7 +4,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QuestionCard from './QuestionCard';
-import { Button } from "@material-tailwind/react";
+import { Button, Select, Option, } from "@material-tailwind/react";
 
 const GetAllAuestions = () => {
 
@@ -13,14 +13,20 @@ const GetAllAuestions = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const contentRef = useRef(null);
     const [filter, setFilterData] = useState('all');
+    const [subjectfilter, setsubjectfilter] = useState('all');
+
+    const getSubjectType = (e) => {
+        console.log("onachnage ",e);
+        setsubjectfilter(e);
+    }
 
     useEffect(() => {
         fetchData();
-    }, [currentPage, filter]);
+    }, [currentPage, filter,subjectfilter]);
 
     const fetchData = async () => {
-        console.log(filter);
-        await axios.get(`http://localhost:4000/q/data?page=${currentPage}&limit=10&qeryfilter=${filter}`)
+        console.log("ofeter set value",subjectfilter)
+        await axios.get(`http://localhost:4000/q/data?page=${currentPage}&limit=10&qeryfilter=${filter}&subject=${subjectfilter}`)
             .then(response => {
                 setData(response.data.results);
                 setTotalPages(response.data.totalPages);
@@ -60,6 +66,7 @@ const GetAllAuestions = () => {
         setCurrentPage(1);
     };
 
+   
     return (
         <div>
             <div className="bg-purple-200 h-16" >
@@ -67,6 +74,21 @@ const GetAllAuestions = () => {
                     <div></div>
                     <div className="p-4">
                         <ul className="flex flex-wrap space-x-6">
+                            {/* <li>
+                            <Select label="Select Question type" color="purple" onChange={e =>  getSubjectType( e) } name="qtype">
+                                        <Option value="Text">Text</Option>
+                                        <Option value="Image">Image</Option>
+                                    </Select>
+                            </li> */}
+                            <li>
+                                <Select variant="outlined" name="subject" value={subjectfilter} label="Select Subject" onChange={getSubjectType} >
+                                    <Option value="all">All</Option>
+                                    <Option value="maths">Maths</Option>
+                                    <Option value="physics">Physics</Option>
+                                    <Option value="english">English</Option>
+                                </Select>
+                            </li>
+
                             <li>
                                 <Button variant="outlined" value="easy" onClick={getFilterdData}>Easy</Button>
                             </li>
@@ -78,8 +100,10 @@ const GetAllAuestions = () => {
                             </li>
                         </ul>
                     </div>
-                    <div onClick={handleDownloadPDF} >
-                        <img className="p-2 w-18 h-14 " alt="" src="https://www.creativefabrica.com/wp-content/uploads/2021/12/29/Download-Logo-Graphics-22575051-1.jpg" />
+                    <div onClick={handleDownloadPDF} className='cursor-pointer'>
+                        <div >
+                            <small className="p-2 w-14 h-96 ">pdf download⬇️</small>
+                        </div>
                     </div>
                 </div>
 
