@@ -88,7 +88,7 @@ const GetAllAuestions = () => {
                                     <Option value="english">English</Option>
                                 </Select>
                             </li>
-
+dfvxjvjxvbjh
                             <li>
                                 <Button variant="outlined" value="easy" onClick={getFilterdData}>Easy</Button>
                             </li>
@@ -102,6 +102,9 @@ const GetAllAuestions = () => {
                     </div>
                     <div onClick={handleDownloadPDF} className='cursor-pointer'>
                         <div >
+
+
+
                             <small className="p-2 w-14 h-96 ">pdf download⬇️</small>
                         </div>
                     </div>
