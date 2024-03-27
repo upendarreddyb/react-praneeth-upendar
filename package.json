@@ -9,6 +9,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
+    "docx": "^8.5.0",
+    "file-saver": "^2.0.5",
+    "filesaver": "^0.0.13",
     "formik": "^2.4.5",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
@@ -19,11 +22,21 @@
     "web-vitals": "^2.1.4",
     "yup": "^0.28.5"
   },
+  "dist": "electron-builder",
+  "main": "electron-entry",
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "My Electron App",
+    "directories": {
+      "output": "dist"
+    }
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +57,9 @@
     ]
   },
   "devDependencies": {
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3",
+    "electron-is-dev": "^3.0.1",
     "react-router-dom": "^6.22.2",
     "tailwindcss": "^3.4.1"
   }

@@ -16,16 +16,16 @@ const GetAllAuestions = () => {
     const [subjectfilter, setsubjectfilter] = useState('all');
 
     const getSubjectType = (e) => {
-        console.log("onachnage ",e);
+        console.log("onachnage ", e);
         setsubjectfilter(e);
     }
 
     useEffect(() => {
         fetchData();
-    }, [currentPage, filter,subjectfilter]);
+    }, [currentPage, filter, subjectfilter]);
 
     const fetchData = async () => {
-        console.log("ofeter set value",subjectfilter)
+        console.log("ofeter set value", subjectfilter)
         await axios.get(`http://localhost:4000/q/data?page=${currentPage}&limit=10&qeryfilter=${filter}&subject=${subjectfilter}`)
             .then(response => {
                 setData(response.data.results);
@@ -48,10 +48,10 @@ const GetAllAuestions = () => {
         }
     };
 
-    const handleDownloadPDF = () => {
+    const handleDownloadPDF = async () => {
         const input = contentRef.current;
         console.log(input)
-        html2canvas(input, { useCORS: true }).then((canvas) => {
+        await html2canvas(input, { useCORS: true }).then((canvas) => {
             const imgData = canvas.toDataURL('image/jpeg');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const imgWidth = 210;
@@ -66,7 +66,6 @@ const GetAllAuestions = () => {
         setCurrentPage(1);
     };
 
-   
     return (
         <div>
             <div className="bg-purple-200 h-16" >
@@ -74,12 +73,6 @@ const GetAllAuestions = () => {
                     <div></div>
                     <div className="p-4">
                         <ul className="flex flex-wrap space-x-6">
-                            {/* <li>
-                            <Select label="Select Question type" color="purple" onChange={e =>  getSubjectType( e) } name="qtype">
-                                        <Option value="Text">Text</Option>
-                                        <Option value="Image">Image</Option>
-                                    </Select>
-                            </li> */}
                             <li>
                                 <Select variant="outlined" name="subject" value={subjectfilter} label="Select Subject" onChange={getSubjectType} >
                                     <Option value="all">All</Option>
@@ -88,7 +81,7 @@ const GetAllAuestions = () => {
                                     <Option value="english">English</Option>
                                 </Select>
                             </li>
-dfvxjvjxvbjh
+
                             <li>
                                 <Button variant="outlined" value="easy" onClick={getFilterdData}>Easy</Button>
                             </li>
@@ -117,7 +110,7 @@ dfvxjvjxvbjh
                         <div className=''>
                             <QuestionCard qData={item} />
                         </div>
-                        <div className="py-6">
+                        <div className="py-2">
                         </div>
                     </div>
                 ))}

@@ -102,7 +102,7 @@ const AddQuestion = () => {
     return (
         <div className="">
            
-            <div className="bg-purple-200 h-16 shadow-xl" >
+            <div className="bg-purple-200 h-16 shadow-xl " >
                 <h2 className="text-white text-center py-5 font-bolt text-xl">Adding Question</h2>
             </div>
             <div className="w-10/12 mx-auto my-4  shadow-xl p-4 m-auto border-gray-200 ">
